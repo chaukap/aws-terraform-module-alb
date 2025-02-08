@@ -23,3 +23,8 @@ variable "certificate_arn" {
   description = "ARN of ACM certificate for HTTPS listener"
   type        = string
 }
+
+variable "domain_name" {
+  description = "Domain which will route to this load balancer."
+  type        = string
+}

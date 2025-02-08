@@ -1,3 +1,7 @@
+data "aws_route53_zone" "domain" {
+  name = var.domain_name
+}
+
 resource "aws_security_group" "alb" {
   name        = "mastodon-alb-${var.environment}"
   description = "Security group for Mastodon ALB"
@@ -139,5 +143,17 @@ resource "aws_lb_listener_rule" "api_limiting" {
     path_pattern {
       values = ["/api/*"]
     }
+  }
+}
+
+resource "aws_route53_record" "main" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = var.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.main.dns_name
+    zone_id                = aws_lb.main.zone_id
+    evaluate_target_health = true
   }
 }
