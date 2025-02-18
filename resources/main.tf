@@ -66,7 +66,7 @@ resource "aws_lb_target_group" "web" {
 }
 
 resource "aws_lb_target_group" "streaming" {
-  name        = "${replace("${var.domain_name}", ".", "-")}-streaming"
+  name        = substr("${replace("${var.domain_name}", ".", "-")}-streaming", 0, 31)
   port        = 4000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
