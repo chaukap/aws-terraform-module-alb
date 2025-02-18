@@ -35,7 +35,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_lb" "main" {
-  name               = "mastodon-${var.environment}"
+  name               = replace("${var.domain_name}", ".", "-")
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -50,7 +50,7 @@ resource "aws_lb" "main" {
 }
 # Target Groups
 resource "aws_lb_target_group" "web" {
-  name        = "mastodon-web"
+  name        = "${replace("${var.domain_name}", ".", "-")}-web"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -66,7 +66,7 @@ resource "aws_lb_target_group" "web" {
 }
 
 resource "aws_lb_target_group" "streaming" {
-  name        = "mastodon-streaming"
+  name        = "${replace("${var.domain_name}", ".", "-")}-streaming"
   port        = 4000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
