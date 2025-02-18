@@ -35,7 +35,7 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_lb" "main" {
-  name               = replace("${var.domain_name}", ".", "-")
+  name               = substr(replace("${var.domain_name}", ".", "-"), 0, 31)
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -50,7 +50,7 @@ resource "aws_lb" "main" {
 }
 # Target Groups
 resource "aws_lb_target_group" "web" {
-  name        = "${replace("${var.domain_name}", ".", "-")}-web"
+  name        = substr("web-${replace("${var.domain_name}", ".", "-")}", 0, 31)
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -66,7 +66,7 @@ resource "aws_lb_target_group" "web" {
 }
 
 resource "aws_lb_target_group" "streaming" {
-  name        = substr("${replace("${var.domain_name}", ".", "-")}-streaming", 0, 31)
+  name        = substr("streaming-${replace("${var.domain_name}", ".", "-")}", 0, 31)
   port        = 4000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
